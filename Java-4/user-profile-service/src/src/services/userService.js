@@ -10,19 +10,23 @@ class UserService {
 
     // Check if the email is already in use
     const { data, error } = await supabase
-      .from('users')
-      .select('email')
-      .eq('email', userData.email)
-      .single();
-    
-    if (error) {
-      throw new Error('Error checking email: ' + error.message);
-    }
+    .from('users')
+    .select('*')
+    .eq('email', userData.email);
+  
+  if (error) {
+    throw new Error("Error checking email: " + error.message);
+  }
 
-    if (data) {
-      throw new Error('Email already in use');
-    }
-
+  if (data.length > 0) {
+    throw new Error("Email already in use");
+  }
+  
+  
+  // if (data.length > 0) {
+  //   throw new Error("Email already in use");
+  // }
+  
     // Hash password
     const hashedPassword = await hashPassword(userData.password);
 
